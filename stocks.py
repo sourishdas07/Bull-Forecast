@@ -19,11 +19,11 @@ hide_st_style = """
 
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
-
+# Backend
 START = datetime.strftime((datetime.now() - timedelta(1000)), '%Y-%m-%d')
 TODAY = date.today().strftime("%Y-%m-%d")
 
-
+# Stocks Sample - Add More Markets in the Future
 df = pd.read_excel('company_list.xlsx')
 stocks = df['Symbol'].values.tolist()
 selected_stock = st.selectbox("Select A Stock", stocks)
@@ -31,13 +31,11 @@ selected_stock = st.selectbox("Select A Stock", stocks)
 n_months = st.slider("Months of prediction: ", 1, 24)  # Changed Years to Months
 period = n_months * 30
 
-
 @st.cache
 def load_data(ticker):
     data = yf.download(ticker, START, TODAY)
     data.reset_index(inplace=True)
     return data
-
 
 data_load_state = st.text('Loading data...')
 data = load_data(selected_stock)
@@ -58,7 +56,7 @@ def plot_raw_data():
 
 plot_raw_data()
 
-# Predict forecast with Prophet.
+# Predict Forecast with Prophet
 df_train = data[['Date', 'Close']]
 df_train = df_train.rename(columns={"Date": "ds", "Close": "y"})
 
@@ -67,7 +65,7 @@ m.fit(df_train)
 future = m.make_future_dataframe(periods=period)
 forecast = m.predict(future)
 
-# Show and plot forecast
+# Show and Plot Forecast
 st.subheader('Forecast data')
 st.write(forecast.tail())
 
