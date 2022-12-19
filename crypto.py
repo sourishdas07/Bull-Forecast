@@ -8,9 +8,7 @@ from plotly import graph_objs as go
 from streamlit_option_menu import option_menu
 from datetime import timedelta, datetime
 
-
 st.title("Crypto Bull")
-
 
 # Styling
 hide_st_style = """
@@ -27,14 +25,14 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 START = datetime.strftime((datetime.now() - timedelta(1000)), '%Y-%m-%d')
 TODAY = date.today().strftime("%Y-%m-%d")
 
+# Crypto Sample - Add More in Future
 coins = ('ADA-CAD', 'BNB-CAD', 'BTC-CAD', 'DAI-CAD', 'DOGE-CAD', 'DOT-CAD',
          'ETH-CAD', 'MATIC-CAD', 'LTC-CAD', 'SOL-CAD', 'SHIB-CAD',
          'USDT-CAD', 'USDC-CAD', 'XRP-CAD')
 
 selected_coin = st.selectbox("Select A Stock", coins)
 
-n_months = st.slider("Months of prediction: ", 1,
-                      24)  # Changed Years to Months
+n_months = st.slider("Months of prediction: ", 1, 24)  # Changed Years to Months
 period = n_months * 30
 
 @st.cache
@@ -60,7 +58,7 @@ def plot_raw_data():
 
 plot_raw_data()
 
-    # Forecasting
+# Predict Forecast with Prophet
 df_train = data[['Date', 'Close']]
 df_train = df_train.rename(columns={"Date": "ds", "Close": "y"})
 
@@ -69,6 +67,7 @@ m.fit(df_train)
 future = m.make_future_dataframe(periods=period)
 forecast = m.predict(future)
 
+# Show and Plot Forecast
 st.subheader('Forecast Data')
 st.write(forecast.tail())
 
